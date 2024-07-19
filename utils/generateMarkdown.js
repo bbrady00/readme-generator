@@ -1,20 +1,91 @@
-// TODO: Create a function that returns a license badge based on which license is passed in
+const licenseData = require("./licenseData");
+// Function that returns a license badge based on which license is passed in
 // If there is no license, return an empty string
-function renderLicenseBadge(license) {}
+function renderLicenseBadge(license) {
+  if (license) {
+    const licenseText = `[![License](https://img.shields.io/badge/License-${license}-blue.svg)]`;
+    return licenseText;
+  } else {
+    return "";
+  }
+}
 
-// TODO: Create a function that returns the license link
+// Function that returns the license link
 // If there is no license, return an empty string
-function renderLicenseLink(license) {}
+function renderLicenseLink(license) {
+  if (license) {
+    const link = `(${license})`;
+    return link;
+  } else {
+    return "";
+  }
+}
 
-// TODO: Create a function that returns the license section of README
+// Function that returns the license section of README
 // If there is no license, return an empty string
-function renderLicenseSection(license) {}
+function renderLicenseSection(license, link) {
+  if (license) {
+    const text = `Distributed under the ${license}. For more information, see <a href=${link}>here</a>`;
+    return text;
+  } else {
+    return "";
+  }
+}
 
-// TODO: Create a function to generate markdown for README
+// Function to generate markdown for README
 function generateMarkdown(data) {
+  //Filter the license data to call the correct info for each function
+  const newLicense = licenseData.filter(
+    (license) => license.value === data.license
+  );
+
+  //Call the functions to create the correct data
+  const text = renderLicenseBadge(newLicense[0].value);
+  const link = renderLicenseLink(newLicense[0].link);
+  const textSection = renderLicenseSection(
+    newLicense[0].name,
+    newLicense[0].link
+  );
+  const shield = text + link;
+
   return `# ${data.title}
 
-`;
+  ${shield}
+  
+  ## DESCRIPTION
+  ${data.description}
+  
+  ## TABLE OF CONTENTS
+  
+  <ol>
+  <li><a href="#description">Description</a></li>
+  <li><a href="#installation">Installation</a></li>
+  <li><a href="#usage">Usage</a></li>
+  <li><a href="#licence">Licence</a> </li>
+  <li><a href="#contributions">Contributions</a></li>
+  <li><a href="#tests">Tests</a></li>
+  <li><a href="#questions">Questions</a></li>
+  </ol>
+  
+  ## INSTALLATION
+  ${data.install}
+  
+  ## USAGE
+  ${data.usage}
+  
+  ## LICENCE
+  ${textSection}
+  
+  ## CONTRIBUTIONS
+  ${data.contribution}
+  
+  ## TESTS
+  ${data.test}
+  
+  ## QUESTIONS
+  Github Username: <a href='https://github.com/${data.user}'>${data.user}</a>  
+  Feel free to email me at ${data.email} for further questions. 
+  `;
 }
 
 module.exports = generateMarkdown;
